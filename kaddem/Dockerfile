@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # Copy the packaged JAR file into the container
-COPY target/DevOps_Project-2.1.jar /app/DevOps_Project-2.1.jar
+COPY target/kaddem-0.0.5.jar /app/DevOps_Project-2.1.jar
 
 # Expose the port your Spring Boot application will run on
 EXPOSE 8082
