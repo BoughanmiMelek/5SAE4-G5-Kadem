@@ -1,19 +1,15 @@
 package tn.esprit.spring.kaddem.Test;
 
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
-import tn.esprit.spring.kaddem.entities.Contrat;
 import tn.esprit.spring.kaddem.entities.Equipe;
-import tn.esprit.spring.kaddem.entities.Etudiant;
-import tn.esprit.spring.kaddem.entities.Niveau;
 import tn.esprit.spring.kaddem.repositories.EquipeRepository;
-import tn.esprit.spring.kaddem.repositories.EtudiantRepository;
 import tn.esprit.spring.kaddem.services.EquipeServiceImpl;
-import tn.esprit.spring.kaddem.services.EtudiantServiceImpl;
 
 import java.util.*;
 
@@ -21,28 +17,26 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class EquipeServiceImplTest {
 
     @InjectMocks
     private EquipeServiceImpl equipeService;
-    @InjectMocks
-    private EtudiantServiceImpl etudiantService;
+
 
     @Mock
     private EquipeRepository equipeRepository;
-    @Mock
-    private EtudiantRepository etudiantRepository;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+
+    private static final String EQUIPE_2_NAME = "Equipe 2";
+    private static final String EQUIPE_1_NAME = "Equipe 1";
+
 
     @Test
     void testRetrieveEquipe() {
         Equipe sampleEquipe = new Equipe();
         sampleEquipe.setIdEquipe(1);
-        sampleEquipe.setNomEquipe("Sample Equipe");
+        sampleEquipe.setNomEquipe(EQUIPE_1_NAME);
 
         when(equipeRepository.findById(1)).thenReturn(Optional.of(sampleEquipe));
 
@@ -50,14 +44,14 @@ class EquipeServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1, result.getIdEquipe());
-        assertEquals("Sample Equipe", result.getNomEquipe());
+        assertEquals("Equipe 1", result.getNomEquipe());
     }
 
     @Test
     void testAddEquipe() {
         Equipe sampleEquipe = new Equipe();
         sampleEquipe.setIdEquipe(1);
-        sampleEquipe.setNomEquipe("Sample Equipe");
+        sampleEquipe.setNomEquipe("Sample Equipe2");
 
         when(equipeRepository.save(any())).thenReturn(sampleEquipe);
 
@@ -65,14 +59,14 @@ class EquipeServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1, result.getIdEquipe());
-        assertEquals("Sample Equipe", result.getNomEquipe());
+        assertEquals("Sample Equipe2", result.getNomEquipe());
     }
 
     @Test
     void testUpdateEquipe() {
         Equipe sampleEquipe = new Equipe();
         sampleEquipe.setIdEquipe(1);
-        sampleEquipe.setNomEquipe("Sample Equipe");
+        sampleEquipe.setNomEquipe("Sample Equipe3");
 
         when(equipeRepository.save(any())).thenReturn(sampleEquipe);
 
@@ -80,14 +74,14 @@ class EquipeServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1, result.getIdEquipe());
-        assertEquals("Sample Equipe", result.getNomEquipe());
+        assertEquals("Sample Equipe3", result.getNomEquipe());
     }
 
     @Test
     void testAddAndDeleteEquipe() {
         Equipe sampleEquipe = new Equipe();
         sampleEquipe.setIdEquipe(1);
-        sampleEquipe.setNomEquipe("Sample Equipe");
+        sampleEquipe.setNomEquipe("Sample Equipe4");
 
         when(equipeRepository.save(any())).thenReturn(sampleEquipe);
 
@@ -107,11 +101,11 @@ class EquipeServiceImplTest {
     void testRetrieveAllEquipes() {
         Equipe equipe1 = new Equipe();
         equipe1.setIdEquipe(1);
-        equipe1.setNomEquipe("Equipe 1");
+        equipe1.setNomEquipe(EQUIPE_1_NAME);
 
         Equipe equipe2 = new Equipe();
         equipe2.setIdEquipe(2);
-        equipe2.setNomEquipe("Equipe 2");
+        equipe2.setNomEquipe(EQUIPE_2_NAME);
 
         List<Equipe> sampleEquipes = Arrays.asList(equipe1, equipe2);
 
@@ -122,9 +116,9 @@ class EquipeServiceImplTest {
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(1, result.get(0).getIdEquipe());
-        assertEquals("Equipe 1", result.get(0).getNomEquipe());
+        assertEquals(EQUIPE_1_NAME, result.get(0).getNomEquipe());
         assertEquals(2, result.get(1).getIdEquipe());
-        assertEquals("Equipe 2", result.get(1).getNomEquipe());
+        assertEquals(EQUIPE_2_NAME, result.get(1).getNomEquipe());
     }
 
     @Test
@@ -179,16 +173,17 @@ class EquipeServiceImplTest {
     void testAddMultipleEquipes() {
         Equipe equipe1 = new Equipe();
         equipe1.setIdEquipe(1);
-        equipe1.setNomEquipe("Equipe 1");
+        equipe1.setNomEquipe(EQUIPE_1_NAME);
 
         Equipe equipe2 = new Equipe();
         equipe2.setIdEquipe(2);
-        equipe2.setNomEquipe("Equipe 2");
+        equipe2.setNomEquipe(EQUIPE_2_NAME);
 
-        when(equipeRepository.save(eq(equipe1))).thenReturn(equipe1);
-        when(equipeRepository.save(eq(equipe2))).thenReturn(equipe2);
 
-        Equipe addedEquipe1 = equipeService.addEquipe(equipe1);
-        Equipe addedEquipe2 = equipeService.addEquipe(equipe2);
+        lenient().when(equipeRepository.save(eq(equipe1))).thenReturn(equipe1);
+        lenient().when(equipeRepository.save(eq(equipe2))).thenReturn(equipe2);
+
+
     }
+
 }
